@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Engineer Quiz</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌐</text></svg>">
+</head>
+<body>
+    <!-- Главный контейнер -->
+    <div class="container">
+        <!-- Заголовок -->
+        <header class="header">
+            <h1><i class="fas fa-network-wired"></i> Network Engineer Quiz</h1>
+            <p class="subtitle">Тестирование по сетям CCNA/CCNP/CCIE</p>
+        </header>
+
+        <!-- Панель управления -->
+        <div class="control-panel">
+            <div class="filter-section">
+                <label for="difficulty-filter">Уровень:</label>
+                <select id="difficulty-filter">
+                    <option value="all">Все уровни</option>
+                    <option value="CCNA">CCNA</option>
+                    <option value="CCNP">CCNP</option>
+                    <option value="CCIE">CCIE</option>
+                    <option value="final">Финальный тест</option>
+                </select>
+                
+                <label class="checkbox-label">
+                    <input type="checkbox" id="shuffle-checkbox">
+                    Перемешать вопросы
+                </label>
+                
+                <label class="checkbox-label">
+                    <input type="checkbox" id="show-answers-checkbox" checked>
+                    Показывать ответы сразу
+                </label>
+            </div>
+            
+            <button id="start-quiz" class="btn start-btn">
+                <i class="fas fa-play"></i> Начать тест
+            </button>
+        </div>
+
+        <!-- Прогресс-бар -->
+        <div class="progress-container">
+            <div class="progress-info">
+                <span id="progress-text">Вопрос 0/0</span>
+                <span id="difficulty-text" class="difficulty-label ccna">CCNA</span>
+            </div>
+            <div class="progress-bar">
+                <div id="progress-fill" class="progress-fill"></div>
+            </div>
+        </div>
+
+        <!-- Основная область с вопросами -->
+        <main class="quiz-area">
+            <!-- Экран приветствия -->
+            <div id="welcome-screen" class="screen active">
+                <div class="welcome-content">
+                    <div class="welcome-icon">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <h2>Готовы проверить свои знания?</h2>
+                    <p class="welcome-description">
+                        Пройдите тестирование из 170+ вопросов по сетевым технологиям, 
+                        основанное на сертификациях Cisco CCNA, CCNP и CCIE.
+                    </p>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon ccna-bg">
+                                <i class="fas fa-certificate"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>CCNA</h3>
+                                <p id="ccna-count">Загрузка...</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon ccnp-bg">
+                                <i class="fas fa-cogs"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>CCNP</h3>
+                                <p id="ccnp-count">Загрузка...</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon ccie-bg">
+                                <i class="fas fa-rocket"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>CCIE</h3>
+                                <p id="ccie-count">Загрузка...</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon final-bg">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Финальный</h3>
+                                <p>30 сложных вопросов</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="instructions">
+                        <h3><i class="fas fa-info-circle"></i> Как работает тест:</h3>
+                        <ul>
+                            <li>Выберите уровень сложности или пройдите все вопросы</li>
+                            <li>Финальный тест включает 30 вопросов (по 10 из каждого уровня)</li>
+                            <li>Отвечайте на вопросы, выбирая один вариант</li>
+                            <li>В режиме обучения вы сразу увидите правильный ответ</li>
+                            <li>В финальном тесте результаты показываются в конце</li>
+                            <li>Используйте клавиши 1-4 для быстрого выбора ответа</li>
+                            <li>Навигация: ←/→ стрелки, Enter для следующего вопроса</li>
+                            <li><strong>Режим обучения:</strong> можно менять ответ, показываются правильные ответы</li>
+                            <li><strong>Финальный тест:</strong> нельзя менять ответ после выбора</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Экран с вопросами -->
+            <div id="question-screen" class="screen">
+                <div class="question-container">
+                    <div class="question-header">
+                        <h2 id="question-number">Вопрос 1</h2>
+                        <div id="question-difficulty" class="difficulty-badge ccna">CCNA</div>
+                    </div>
+                    
+                    <div class="question-text" id="question-text">
+                        Загрузка вопроса...
+                    </div>
+                    
+                    <!-- Контейнер для изображения вопроса -->
+                    <div id="question-image-container" class="question-image-container">
+                        <img id="question-image" class="question-image" src="" alt="Изображение вопроса" style="display: none;">
+                    </div>
+                    
+                    <!-- Варианты ответов -->
+                    <div class="options-container" id="options-container">
+                        <!-- Варианты будут добавляться через JS -->
+                    </div>
+                    
+                    <!-- Область с объяснением -->
+                    <div class="explanation-container">
+                        <div class="explanation-header">
+                            <h3 id="explanation-title">Объяснение</h3>
+                            <div id="result-indicator" class="result-indicator">
+                                <i class="fas fa-info-circle"></i>
+                                Выберите ответ
+                            </div>
+                        </div>
+                        <div class="explanation-text" id="explanation-text">
+                            Выберите вариант ответа, чтобы увидеть объяснение.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Экран результатов -->
+            <div id="results-screen" class="screen">
+                <div class="results-container">
+                    <div class="results-header">
+                        <div class="results-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h2>Тест завершен!</h2>
+                    </div>
+                    
+                    <div class="score-display">
+                        <div class="score-circle">
+                            <span id="score-percentage">0%</span>
+                            <div class="score-label">Результат</div>
+                        </div>
+                        
+                        <div class="score-details">
+                            <div class="score-item">
+                                <span class="score-label">Правильных ответов:</span>
+                                <span id="correct-answers" class="score-value">0</span>
+                            </div>
+                            <div class="score-item">
+                                <span class="score-label">Всего вопросов:</span>
+                                <span id="total-questions" class="score-value">0</span>
+                            </div>
+                            <div class="score-item">
+                                <span class="score-label">Время прохождения:</span>
+                                <span id="time-taken" class="score-value">0:00</span>
+                            </div>
+                            <div class="score-item">
+                                <span class="score-label">Уровень:</span>
+                                <span id="performance-level" class="score-value">Начинающий</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="difficulty-breakdown">
+                        <h3>Результаты по уровням</h3>
+                        <div id="difficulty-stats">
+                            <!-- Статистика будет добавляться через JS -->
+                        </div>
+                    </div>
+                    
+                    <div class="results-actions">
+                        <button id="restart-quiz" class="btn restart-btn">
+                            <i class="fas fa-redo"></i> Пройти заново
+                        </button>
+                        <button id="review-answers" class="btn review-btn">
+                            <i class="fas fa-list-ol"></i> Посмотреть ответы
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Панель навигации -->
+        <div class="navigation-panel">
+            <div class="score-display-panel">
+                <span class="score-text">
+                    <i class="fas fa-star"></i> 
+                    Счет: <span id="current-score">0</span>/<span id="total-score">0</span>
+                </span>
+            </div>
+            
+            <div class="nav-buttons">
+                <button id="prev-question" class="btn nav-btn" disabled>
+                    <i class="fas fa-arrow-left"></i> Назад
+                </button>
+                <button id="next-question" class="btn nav-btn">
+                    Далее <i class="fas fa-arrow-right"></i>
+                </button>
+                <button id="finish-quiz" class="btn finish-btn" disabled>
+                    <i class="fas fa-flag-checkered"></i> Завершить
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для просмотра ответов -->
+    <div id="answers-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Просмотр ответов</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body" id="answers-list">
+                <!-- Список ответов будет добавляться через JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Подключение скриптов -->
+    <script src="questions.js"></script>
+    <script src="script.js"></script>
+    
+    <script>
+        // Регистрация Service Worker для PWA (только если поддерживается)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').then(
+                    function(registration) {
+                        console.log('ServiceWorker зарегистрирован');
+                    },
+                    function(err) {
+                        console.log('Ошибка регистрации ServiceWorker:', err);
+                    }
+                );
+            });
+        }
+    </script>
+</body>
+</html>
